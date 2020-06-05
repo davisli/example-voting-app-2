@@ -1,0 +1,36 @@
+#Open up your pod definition for later reference
+#kubernetes.io/docs/concepts/workloads/controllers/deployment
+#Copy-paste the template and edit
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+  labels:
+    app: demo-voting-app #Good to label all objects since same app
+spec:
+  replicas: 1
+  selector:
+    matchLabels: #Copy-paste name & app from metadata->labels
+      name: postgres-pod
+      app: demo-voting-app
+  template: #everything from metadata and spec of pod
+    metadata:
+      name: postgres-pod
+      labels:
+        name: postgres-pod
+        app: demo-voting-app #consistent label across entire app
+    spec:
+      containers: #One container per pod, so we only have 1 image. We can have multiple but rarely.
+        - name: postgres
+          image: postgres:9.4 #Note some images need you to specify these ENV
+          env:
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name:  POSTGRES_PASSWORD
+              value: "postgres"
+          ports:
+            - containerPort: 5432 #This is default for postgres to listen to.
+
+#Once you are good, you can delete your pod yml.

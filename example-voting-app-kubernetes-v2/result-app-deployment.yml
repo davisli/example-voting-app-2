@@ -1,0 +1,31 @@
+#Open up your pod definition for later reference
+#kubernetes.io/docs/concepts/workloads/controllers/deployment
+#Copy-paste the template and edit
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: result-app-deployment
+  labels:
+    app: demo-voting-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels: #Copy-paste name & app from metadata->labels
+      name: result-app-pod
+      app: demo-voting-app
+  template: #everything from metadata and spec of redis-pod.yml
+    metadata:
+      name: result-app-pod
+      labels:
+        name: result-app-pod
+        app: demo-voting-app
+    spec:
+      containers:
+        - name: voting-app #One container per pod, so we only have 1 image. We can have multiple but rarely.
+          image: dockersamples/examplevotingapp_result
+          ports: #Added port to this pod definition
+            - containerPort: 80 #because is web-app, we need to expose port
+
+#Once you are good, you can delete your pod yml
